@@ -6,9 +6,9 @@ One page timer landing page using three.js and javascript with a countdown timer
 index.html - select demo
 
 ## Demo1.html - 3D Cubes
-![alt text](https://raw.githubusercontent.com/drnoir/animated-Three-js-Landing-page-template-with-counter/blob/master/demo1.png)
+![alt text](https://raw.githubusercontent.com/drnoir/animated-Three-js-Landing-page-template-with-counter/master/demo1.png)
 ## Demo2.html - Lines 
-![alt text](https://raw.githubusercontent.com/drnoir/animated-Three-js-Landing-page-template-with-counter/blob/master/demo2.png)
+![alt text](https://raw.githubusercontent.com/drnoir/animated-Three-js-Landing-page-template-with-counter/master/demo2.png)
 
 by Chris Godber
 www.chrisgodber.co.uk
