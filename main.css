@@ -1,0 +1,54 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+#overlay{
+background-color:black;
+opacity: 1;
+width:100%;
+height:100%;
+}
+
+.timerSec{
+    position:'absolute';
+    color:'white';
+    top:'0';
+    width :'20%';
+    float:left;
+    font-size:2em;
+    margin-left:11%; 
+}
+
+.responsive{
+width: 80%;
+height: auto;
+}
+
+/* font */
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+/* Extra small devices (phones, 600px and down) */
+@media only screen and (max-width: 600px) {
+    .responsive{
+        width: 70%;
+        height: auto;
+        }
+        
+} 
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .responsive{
+        width: 100%;
+        height: auto;
+        }
+} 
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+    .responsive{
+        width: 90%;
+        height: auto;
+        }
+} 
+

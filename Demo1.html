@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Animated Three JS Landing page demo1</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: 'Montserrat', sans-serif;
+				background-color: #f0f0f0;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			label, input {
+				cursor: pointer;
+			}
+
+		</style>
+		  <link rel="stylesheet" type="text/css" href="main.css">
+	</head>
+	<body id ="overlay">
+
+		<script src="build/three.js"></script>
+
+<!--		<script src="js/stats.min.js"></script>-->
+		
+		<!--glitch lib loaders-->
+		<script src="js/CopyShader.js"></script>
+		<script src="js/DigitalGlitch.js"></script>
+
+		<script src="js/EffectComposer.js"></script>
+		<script src="js/RenderPass.js"></script>
+		<script src="js/MaskPass.js"></script>
+		<script src="js/ShaderPass.js"></script>
+		<script src="js/GlitchPass.js"></script>
+
+		<script>
+
+			var container;
+			var camera, scene, raycaster, renderer;
+
+			var mouse = new THREE.Vector2(), INTERSECTED;
+			var radius = 100, theta = 0;
+			
+			var glitchPass;
+
+			init();
+			startTime();
+			animate();
+			
+			function updateOptions() {
+				var wildGlitch = document.getElementById('wildGlitch');
+			}
+
+
+			function startTime(){
+
+				var x = setInterval(function() {
+				var countDownDate = new Date("oct 31, 2019 00:00:00").getTime();
+				// Get todays date and time
+				var now = new Date().getTime();
+
+				// Find the distance between now and the count down date
+				var distance = countDownDate - now;
+
+				// Time calculations for days, hours, minutes and seconds
+				var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+				var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+				var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+				var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                // var milliseconds = Math.floor((distance % (1000 * 60)) * 1000 /1000);
+				
+				// Display the result in the element with id="dem"o"
+				document.getElementById("timer").innerHTML ="<h1>Website Name</h1><h2>Countdown to Launch</h2><div class ='timerSec'>"+days + " Days " +'</div>'+'<div class ="timerSec">' +hours + " Hours "+
+				 '</div>'+'<div class ="timerSec">'+ minutes + " Minutes" +"</div><div class ='timerSec'>"+ seconds + " Seconds"+'</div></div>';
+
+				// If the count down is finished, write some text 
+				if (distance < 0) {
+					clearInterval(x);
+					document.getElementById("timer").innerHTML = "<h1>COUNTDOWN EXPIRED</h1>";
+				}
+				}, 1000);
+		}
+
+		
+			function init() {
+
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				var info = document.createElement( 'div' );
+				var timer = document.createElement( 'div' );
+				var timerSec = document.createElement( 'div' );
+				var overlay = document.createElement( 'div' );
+				var byem = document.createElement ('div');
+                var logo = document.createElement ('div');
+      
+				timer.style.position = 'absolute';
+				timer.style.color = 'white';
+				timer.style.top = '0%';
+				timer.style.textAlign = 'center';
+				timer.style.width = '100%';
+				timer.style.margin = '0 auto';
+				timer.innerHTML = '<div id = "timer"></div>'
+
+				timerSec.style.cssFloat = "left";
+				timerSec.style.width = "25%";
+				timerSec.style.fontSize = "2em";
+				timerSec.style.textAlign = 'center';
+				
+                byem.style.position = 'absolute';
+				byem.style.color = 'white';
+				byem.style.top = '80%';
+                byem.style.fontSize = "1.4em";
+				byem.style.textAlign = 'center';
+				byem.style.width = '100%';
+				byem.style.margin = '0 auto';
+              
+                
+            
+				
+				byem.innerHTML = '<div id = "byem"><h1>Launching on Oct 31st 2019 </div>'
+
+			
+				// container.appendChild( info );
+				container.appendChild( timer );
+				timer.appendChild( timerSec );
+				container.appendChild(byem);
+                container.appendChild(logo);
+                
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
+
+				scene = new THREE.Scene();
+				scene.background = new THREE.Color( 0x000000 );
+			
+
+				var light = new THREE.DirectionalLight( 0xffffff, 1 );
+				light.position.set( 1, 1, 1 ).normalize();
+				scene.add( light );
+
+				var geometry = new THREE.BoxBufferGeometry( 10, 10, 10);
+
+				for ( var i = 0; i < 2000; i ++ ) {
+
+					var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color:0xB4CDCD } ) );
+
+					object.position.x = Math.random() * 800 - 400;
+					object.position.y = Math.random() * 800 - 400;
+					object.position.z = Math.random() * 800 - 400;
+
+					object.rotation.x = Math.random() * 2 * Math.PI;
+					object.rotation.y = Math.random() * 2 * Math.PI;
+					object.rotation.z = Math.random() * 2 * Math.PI;
+
+					object.scale.x = Math.random() + 0.5;
+					object.scale.y = Math.random() + 0.5;
+					object.scale.z = Math.random() + 0.5;
+
+					scene.add( object );
+
+				}
+
+				raycaster = new THREE.Raycaster();
+
+				renderer = new THREE.WebGLRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild(renderer.domElement);
+
+				
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+
+				//
+
+				window.addEventListener( 'resize', onWindowResize, false );
+				
+				// postprocessing
+
+				composer = new THREE.EffectComposer( renderer );
+				composer.addPass( new THREE.RenderPass( scene, camera ) );
+
+				glitchPass = new THREE.GlitchPass();
+				glitchPass.renderToScreen = true;
+				composer.addPass( glitchPass );
+				updateOptions();
+			}
+
+			function onWindowResize() {
+
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+
+				renderer.setSize( window.innerWidth, window.innerHeight );
+
+			}
+
+			function onDocumentMouseMove( event ) {
+
+				event.preventDefault();
+
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+			}
+	
+
+			//
+
+			function animate() {
+
+				requestAnimationFrame( animate );
+
+				render();
+				composer.render();
+				
+
+			}
+
+			function render() {
+
+				theta += 0.1;
+
+				camera.position.x = radius * Math.sin( THREE.Math.degToRad( theta ) );
+				camera.position.y = radius * Math.sin( THREE.Math.degToRad( theta ) );
+				camera.position.z = radius * Math.cos( THREE.Math.degToRad( theta ) );
+				camera.lookAt( scene.position );
+
+				camera.updateMatrixWorld();
+
+				// find intersections
+
+				raycaster.setFromCamera( mouse, camera );
+
+				var intersects = raycaster.intersectObjects( scene.children );
+
+				if ( intersects.length > 0 ) {
+
+					if ( INTERSECTED != intersects[ 0 ].object ) {
+
+						if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+
+						INTERSECTED = intersects[ 0 ].object;
+						INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+						INTERSECTED.material.emissive.setHex( 0xff0000 );
+
+					}
+
+				} else {
+
+					if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+
+					INTERSECTED = null;
+
+				}
+
+				renderer.render( scene, camera );
+
+			}
+
+		</script>
+
+	</body>
+</html>

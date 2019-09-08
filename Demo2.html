@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>Animated Three JS Landing page demo 2</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+                font-family: 'Montserrat', sans-serif;
+				background-color: #000000;
+				margin: 0px;
+				overflow: hidden;
+			}
+			a {
+				color:#0078ff;
+			}
+        </style>
+        	  <link rel="stylesheet" type="text/css" href="main.css">
+	</head>
+	<body>
+
+		<script src="build/three.js"></script>
+
+		<script src="js/Projector.js"></script>
+		<script src="js/CanvasRenderer.js"></script>
+
+		<script>
+			var mouseX = 0, mouseY = 0,
+			windowHalfX = window.innerWidth / 2,
+			windowHalfY = window.innerHeight / 2,
+			camera, scene, renderer;
+			init();
+            startTime();
+			animate();
+
+        function startTime(){
+
+            var x = setInterval(function() {
+            var countDownDate = new Date("oct 31, 2019 00:00:00").getTime();
+            // Get todays date and time
+            var now = new Date().getTime();
+
+            // Find the distance between now and the count down date
+            var distance = countDownDate - now;
+
+            // Time calculations for days, hours, minutes and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+			// var milliseconds = Math.floor((distance % (1000 * 60)) * 1000 /1000);
+			
+            // Display the result in the element with id="dem"o"
+				document.getElementById("timer").innerHTML ="<h1>Website Name</h1><h2>Countdown to Launch</h2><div class ='timerSec'>"+days + " Days " +'</div>'+'<div class ="timerSec">' +hours + " Hours "+
+				 '</div>'+'<div class ="timerSec">'+ minutes + " Minutes" +"</div><div class ='timerSec'>"+ seconds + " Seconds"+'</div></div>';
+
+            // If the count down is finished, write some text 
+            if (distance < 0) {
+                clearInterval(x);
+				document.getElementById("timer").innerHTML = "<h1>COUNTDOWN EXPIRED</h1>";
+            }
+            }, 1000);
+        }
+
+
+			function init() {
+				var container = document.createElement('div');
+				var timer = document.createElement( 'div' );
+				var timerSec = document.createElement( 'div' );
+				var overlay = document.createElement( 'div' );
+				var byem = document.createElement ('div');
+                var logo = document.createElement ('div');
+                
+                timer.style.position = 'absolute';
+				timer.style.color = 'white';
+				timer.style.top = '0%';
+				timer.style.textAlign = 'center';
+				timer.style.width = '100%';
+				timer.style.margin = '0 auto';
+				timer.innerHTML = '<div id = "timer"></div>'
+
+				timerSec.style.cssFloat = "left";
+				timerSec.style.width = "25%";
+				timerSec.style.fontSize = "2em";
+				timerSec.style.textAlign = 'center';
+				
+                byem.style.position = 'absolute';
+				byem.style.color = 'white';
+				byem.style.top = '80%';
+                byem.style.fontSize = "1.4em";
+				byem.style.textAlign = 'center';
+				byem.style.width = '100%';
+				byem.style.margin = '0 auto';
+            
+            
+				byem.innerHTML = '<div id = "byem"><h1>Launching on Oct 31st 2019 </div>'
+                   
+			
+				// container.appendChild( info );
+                document.body.appendChild(container);
+                container.appendChild( timer );
+				timer.appendChild( timerSec );
+				container.appendChild(byem);
+                container.appendChild(logo);
+
+              
+
+
+				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 10000 );
+				camera.position.z = 100;
+				scene = new THREE.Scene();
+				renderer = new THREE.CanvasRenderer();
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				container.appendChild( renderer.domElement );
+				// particles
+				var PI2 = Math.PI * 2;
+				var material = new THREE.SpriteCanvasMaterial( {
+					color: 0xffffff,
+					program: function ( context ) {
+						context.beginPath();
+						context.arc( 0, 0, 0.5, 0, PI2, true );
+						context.fill();
+					}
+				} );
+				var points = [];
+				for ( var i = 0; i < 100; i ++ ) {
+					var particle = new THREE.Sprite( material );
+					particle.position.x = Math.random() * 2 - 1;
+					particle.position.y = Math.random() * 2 - 1;
+					particle.position.z = Math.random() * 2 - 1;
+					particle.position.normalize();
+					particle.position.multiplyScalar( Math.random() * 10 + 450 );
+					particle.scale.x = particle.scale.y = 10;
+					scene.add( particle );
+					points.push( particle.position );
+				}
+				// lines
+				var geometry = new THREE.BufferGeometry().setFromPoints( points );
+				var line = new THREE.Line( geometry, new THREE.LineBasicMaterial( { color: 0xffffff, opacity: 0.5 } ) );
+				scene.add( line );
+				document.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				document.addEventListener( 'touchstart', onDocumentTouchStart, false );
+				document.addEventListener( 'touchmove', onDocumentTouchMove, false );
+				//
+				window.addEventListener( 'resize', onWindowResize, false );
+			}
+			function onWindowResize() {
+				windowHalfX = window.innerWidth / 2;
+				windowHalfY = window.innerHeight / 2;
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+			//
+			function onDocumentMouseMove(event) {
+				mouseX = event.clientX - windowHalfX;
+				mouseY = event.clientY - windowHalfY;
+			}
+			function onDocumentTouchStart( event ) {
+				if ( event.touches.length > 1 ) {
+					event.preventDefault();
+					mouseX = event.touches[ 0 ].pageX - windowHalfX;
+					mouseY = event.touches[ 0 ].pageY - windowHalfY;
+				}
+			}
+			function onDocumentTouchMove( event ) {
+				if ( event.touches.length == 1 ) {
+					event.preventDefault();
+					mouseX = event.touches[ 0 ].pageX - windowHalfX;
+					mouseY = event.touches[ 0 ].pageY - windowHalfY;
+				}
+			}
+			//
+			function animate() {
+				requestAnimationFrame( animate );
+				render();
+			}
+			function render() {
+				camera.position.x += ( mouseX - camera.position.x ) * .05;
+				camera.position.y += ( - mouseY + 200 - camera.position.y ) * .05;
+				camera.lookAt( scene.position );
+				renderer.render( scene, camera );
+			}
+		</script>
+	</body>
+</html>
